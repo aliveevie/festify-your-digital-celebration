@@ -35,11 +35,11 @@ export const Navbar = () => {
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <a
-                key={link}
-                href={`#${link.toLowerCase()}`}
+                key={link.label}
+                href={link.href}
                 className="text-sm font-medium text-foreground/70 hover:text-foreground transition-colors font-body"
               >
-                {link}
+                {link.label}
               </a>
             ))}
           </div>
@@ -75,12 +75,12 @@ export const Navbar = () => {
             </button>
             {navLinks.map((link) => (
               <a
-                key={link}
-                href={`#${link.toLowerCase()}`}
+                key={link.label}
+                href={link.href}
                 className="text-lg font-heading font-semibold text-foreground/80 hover:text-foreground"
                 onClick={() => setMobileOpen(false)}
               >
-                {link}
+                {link.label}
               </a>
             ))}
             <button className="mt-4 px-5 py-3 rounded-full bg-primary text-primary-foreground text-sm font-semibold font-body">
