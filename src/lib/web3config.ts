@@ -39,7 +39,7 @@ const metadata = {
   icons: ['/favicon.png'],
 };
 
-const chains = [avalanche, avalancheFuji] as const;
+const chains = [avalanche, avalancheFuji] as [typeof avalanche, typeof avalancheFuji];
 
 export const wagmiConfig = defaultWagmiConfig({
   chains,

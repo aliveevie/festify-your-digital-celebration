@@ -11,7 +11,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <WagmiConfig config={wagmiConfig}>
+  <WagmiConfig config={wagmiConfig as any}>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
