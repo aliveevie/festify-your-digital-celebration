@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const heroText = "Send Joy Forever. Onchain.";
 
@@ -12,10 +13,14 @@ const cardMockups = [
 
 export const HeroSection = () => {
   const [confetti, setConfetti] = useState(false);
+  const navigate = useNavigate();
 
   const handleCTA = () => {
     setConfetti(true);
-    setTimeout(() => setConfetti(false), 1500);
+    setTimeout(() => {
+      setConfetti(false);
+      navigate("/app");
+    }, 800);
   };
 
   return (

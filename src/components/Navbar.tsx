@@ -3,7 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/festify-logo.png";
 
-const navLinks = ["Home", "Gallery", "Mint", "About"];
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "Gallery", href: "/#gallery" },
+  { label: "Mint", href: "/mint" },
+  { label: "About", href: "/about" },
+];
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
