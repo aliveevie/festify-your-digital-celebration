@@ -13,9 +13,8 @@ export const Footer = () => (
         </div>
 
         <div className="flex items-center gap-6">
-          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-body">Twitter/X</a>
-          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-body">Discord</a>
-          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-body">GitHub</a>
+          <a href="https://x.com/FestifyClub" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-body">Twitter/X</a>
+          <a href="https://t.me/FestifyClub" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-body">Telegram</a>
         </div>
 
         <div className="flex flex-col items-center md:items-end gap-2">

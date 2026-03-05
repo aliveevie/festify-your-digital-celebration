@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { WagmiConfig } from "wagmi";
 import { wagmiConfig } from "@/lib/web3config";
 import Index from "./pages/Index";
+import Mint from "./pages/Mint";
+import About from "./pages/About";
+import AppPage from "./pages/AppPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,6 +22,9 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/mint" element={<Mint />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/app" element={<AppPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
