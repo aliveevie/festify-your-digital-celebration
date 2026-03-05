@@ -3,7 +3,17 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
+import { WalletGate } from "@/components/WalletGate";
+import { FESTIFY_CONTRACT } from "@/lib/contract";
 import { useNavigate } from "react-router-dom";
+import {
+  useWriteContract,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useSwitchChain,
+  useAccount,
+} from "wagmi";
+import { parseEther, formatEther, isAddress } from "viem";
 
 const occasions = [
   { emoji: "🎂", label: "Birthday", gradient: "from-pink-500 to-purple-600" },
@@ -21,18 +31,86 @@ const Mint = () => {
   const [message, setMessage] = useState("");
   const [recipient, setRecipient] = useState("");
   const [step, setStep] = useState(1);
-  const [minting, setMinting] = useState(false);
+  const [mintError, setMintError] = useState("");
   const navigate = useNavigate();
 
-  const handleMint = () => {
-    setMinting(true);
-    setTimeout(() => {
-      setMinting(false);
-      setStep(4);
-    }, 3000);
+  const { chainId } = useAccount();
+  const { switchChain } = useSwitchChain();
+
+  const { data: mintFee } = useReadContract({
+    address: FESTIFY_CONTRACT.address,
+    abi: FESTIFY_CONTRACT.abi,
+    functionName: "mintFee",
+    chainId: FESTIFY_CONTRACT.chainId,
+  });
+
+  const {
+    writeContract,
+    data: txHash,
+    isPending: isWriting,
+    reset: resetWrite,
+  } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: txHash,
+    });
+
+  const minting = isWriting || isConfirming;
+
+  if (isConfirmed && step === 3) {
+    setStep(4);
+  }
+
+  const handleMint = async () => {
+    setMintError("");
+
+    if (!isAddress(recipient)) {
+      setMintError("Invalid recipient wallet address.");
+      return;
+    }
+
+    if (selected === null) return;
+
+    if (chainId !== FESTIFY_CONTRACT.chainId) {
+      switchChain({ chainId: FESTIFY_CONTRACT.chainId });
+      return;
+    }
+
+    const festival = occasions[selected].label;
+    const metadataURI = `data:application/json,${encodeURIComponent(
+      JSON.stringify({
+        name: `Festify ${festival} Card`,
+        description: message,
+        image: "",
+        attributes: [
+          { trait_type: "Festival", value: festival },
+          { trait_type: "Message", value: message },
+        ],
+      })
+    )}`;
+
+    writeContract(
+      {
+        address: FESTIFY_CONTRACT.address,
+        abi: FESTIFY_CONTRACT.abi,
+        functionName: "mintGreetingCard",
+        args: [recipient as `0x${string}`, metadataURI, festival],
+        value: mintFee ?? parseEther("0"),
+        chainId: FESTIFY_CONTRACT.chainId,
+      },
+      {
+        onError: (err) => {
+          setMintError(err.message.split("\n")[0]);
+        },
+      }
+    );
   };
 
+  const displayFee = mintFee ? formatEther(mintFee) : "...";
+
   return (
+    <WalletGate>
     <div className="relative min-h-screen bg-background overflow-hidden">
       <BackgroundEffects />
       <Navbar />
@@ -190,13 +268,27 @@ const Mint = () => {
                   Network: <span className="text-avax font-semibold">Avalanche C-Chain</span>
                 </p>
                 <p className="text-sm font-body text-muted-foreground">
-                  Gas: <span className="text-foreground">~0.001 AVAX</span>
+                  Mint Fee: <span className="text-foreground">{displayFee} AVAX</span>
                 </p>
               </div>
 
+              {mintError && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 text-left">
+                  <p className="text-sm font-body text-red-400">{mintError}</p>
+                </div>
+              )}
+
+              {chainId !== FESTIFY_CONTRACT.chainId && (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3">
+                  <p className="text-sm font-body text-amber-400">
+                    Please switch to Avalanche C-Chain to mint.
+                  </p>
+                </div>
+              )}
+
               <div className="flex justify-between">
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={() => { setStep(2); setMintError(""); resetWrite(); }}
                   className="px-6 py-3 rounded-full bg-secondary text-foreground font-heading font-bold hover:opacity-90 transition-opacity"
                 >
                   ← Back
@@ -206,14 +298,24 @@ const Mint = () => {
                   disabled={minting}
                   className="px-8 py-3 rounded-full bg-gradient-to-r from-avax to-violet text-foreground font-heading font-bold animate-glow-pulse hover:scale-105 transition-transform disabled:opacity-60"
                 >
-                  {minting ? (
+                  {isWriting ? (
                     <span className="flex items-center gap-2">
                       <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      Minting...
+                      Confirm in Wallet...
                     </span>
+                  ) : isConfirming ? (
+                    <span className="flex items-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Minting on Avalanche...
+                    </span>
+                  ) : chainId !== FESTIFY_CONTRACT.chainId ? (
+                    "Switch to Avalanche"
                   ) : (
                     "Mint & Send 🎉"
                   )}
@@ -234,14 +336,31 @@ const Mint = () => {
               <p className="text-muted-foreground font-body">
                 Your NFT greeting card has been minted on Avalanche and sent to the recipient's wallet.
               </p>
-              <div className="bg-card rounded-xl p-4 border border-border">
-                <p className="text-xs font-mono text-muted-foreground break-all">
-                  TX: 0x7a3f...mock...hash...{recipient.slice(2, 8)}
-                </p>
-              </div>
+              {txHash && (
+                <div className="bg-card rounded-xl p-4 border border-border">
+                  <p className="text-xs font-mono text-muted-foreground break-all mb-2">
+                    TX: {txHash}
+                  </p>
+                  <a
+                    href={`https://snowtrace.io/tx/${txHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-body text-primary hover:underline"
+                  >
+                    View on Snowtrace →
+                  </a>
+                </div>
+              )}
               <div className="flex gap-4 justify-center">
                 <button
-                  onClick={() => { setStep(1); setSelected(null); setMessage(""); setRecipient(""); }}
+                  onClick={() => {
+                    setStep(1);
+                    setSelected(null);
+                    setMessage("");
+                    setRecipient("");
+                    setMintError("");
+                    resetWrite();
+                  }}
                   className="px-6 py-3 rounded-full bg-secondary text-foreground font-heading font-bold hover:opacity-90 transition-opacity"
                 >
                   Mint Another
@@ -259,6 +378,7 @@ const Mint = () => {
       </main>
       <Footer />
     </div>
+    </WalletGate>
   );
 };
 

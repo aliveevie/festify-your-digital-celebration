@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
+import { WalletGate } from "@/components/WalletGate";
 import { useNavigate } from "react-router-dom";
 
 const quickActions = [
@@ -23,6 +24,7 @@ const AppPage = () => {
   const navigate = useNavigate();
 
   return (
+    <WalletGate>
     <div className="relative min-h-screen bg-background overflow-hidden">
       <BackgroundEffects />
       <Navbar />
@@ -113,6 +115,7 @@ const AppPage = () => {
       </main>
       <Footer />
     </div>
+    </WalletGate>
   );
 };
 

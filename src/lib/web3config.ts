@@ -1,6 +1,7 @@
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { avalanche, avalancheFuji } from '@reown/appkit/networks';
+import { http } from 'wagmi';
 
 const projectId = '2c36ad052ffbb4d42ea115856c0fa089';
 
@@ -16,6 +17,10 @@ const networks = [avalanche, avalancheFuji] as const;
 export const wagmiAdapter = new WagmiAdapter({
   projectId,
   networks,
+  transports: {
+    [avalanche.id]: http('https://avalanche.drpc.org'),
+    [avalancheFuji.id]: http('https://api.avax-test.network/ext/bc/C/rpc'),
+  },
 });
 
 createAppKit({
