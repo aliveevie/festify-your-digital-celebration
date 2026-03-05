@@ -45,9 +45,9 @@ export const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity font-body">
-              Connect Wallet
-            </button>
+            <div className="hidden md:block">
+              <appkit-button />
+            </div>
             <button
               className="md:hidden text-foreground"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -83,9 +83,9 @@ export const Navbar = () => {
                 {link.label}
               </a>
             ))}
-            <button className="mt-4 px-5 py-3 rounded-full bg-primary text-primary-foreground text-sm font-semibold font-body">
-              Connect Wallet
-            </button>
+            <div className="mt-4">
+              <appkit-button />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
