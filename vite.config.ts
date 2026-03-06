@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Browser polyfill for @x402/extensions (uses Node crypto.randomBytes)
+      crypto: path.resolve(__dirname, "./src/lib/crypto-polyfill.ts"),
     },
   },
 }));

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BackgroundEffects } from "@/components/BackgroundEffects";
@@ -27,12 +28,20 @@ const occasions = [
 ];
 
 const Mint = () => {
+  const location = useLocation();
   const [selected, setSelected] = useState<number | null>(null);
   const [message, setMessage] = useState("");
   const [recipient, setRecipient] = useState("");
   const [step, setStep] = useState(1);
   const [mintError, setMintError] = useState("");
   const navigate = useNavigate();
+
+  const prefilledMessage = (location.state as { prefilledMessage?: string } | null)?.prefilledMessage;
+  useEffect(() => {
+    if (prefilledMessage && typeof prefilledMessage === "string") {
+      setMessage(prefilledMessage);
+    }
+  }, [prefilledMessage]);
 
   const { chainId } = useAccount();
   const { switchChain } = useSwitchChain();
