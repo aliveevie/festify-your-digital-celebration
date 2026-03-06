@@ -211,6 +211,11 @@
   border-bottom: 1px solid hsl(var(--border) / 0.3);
 }
 
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background-image: radial-gradient(ellipse at center, var(--tw-gradient-stops));
+}
+
 /* Grid background */
 .blockchain-grid {
   background-image: 
