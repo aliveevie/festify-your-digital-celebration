@@ -24,6 +24,9 @@ Mint, send, and treasure moments forever — with AI-powered message generation 
 &nbsp;
 <a href="https://youtu.be/K6FS8sJs8oY"><img src="https://img.shields.io/badge/DEMO_VIDEO-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Demo Video" /></a>
 &nbsp;
+<a href="https://snowtrace.io/address/0x822F7cb652befF262Ec5aE9F4203DD066E3174cd/contract/43114/code">
+  <img src="https://img.shields.io/badge/Verified_Contract-Snowtrace-16a34a?style=for-the-badge&logo=ethereum&logoColor=white" alt="Verified Contract" />
+</a>
 <a href="https://github.com/aliveevie/festify-your-digital-celebration/pull/1"><img src="https://img.shields.io/badge/x402_PR_%231-6f42c1?style=for-the-badge&logo=github&logoColor=white" alt="PR #1" /></a>
 
 <br /><br />
@@ -322,6 +325,7 @@ curl -X POST http://localhost:3001/api/generate \
 |---|---|
 | **Live Demo** | [avalanche.festify.ibxlab.com](https://avalanche.festify.ibxlab.com/) |
 | **Demo Video** | [youtu.be/K6FS8sJs8oY](https://youtu.be/K6FS8sJs8oY) |
+| **Verified Contract** | [Snowtrace](https://snowtrace.io/address/0x822F7cb652befF262Ec5aE9F4203DD066E3174cd/contract/43114/code) |
 | **x402 Integration PR** | [PR #1](https://github.com/aliveevie/festify-your-digital-celebration/pull/1) |
 | **x402 Protocol Docs** | [docs.x402.org](https://docs.x402.org) |
 | **PayAI Facilitator** | [facilitator.payai.network](https://facilitator.payai.network) |
